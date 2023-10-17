@@ -1,30 +1,36 @@
-import express from "express";
-import bodyParser from "body-parser";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
-import AuthRoute from "./Routes/AuthRoute.js";
-import UserRoute from "./Routes/UserRoute.js";
-import PostRoute from "./Routes/PostRoute.js";
-import UploadRoute from "./Routes/UploadRoute.js";
+const io = require('socket.io')(8800, {
+    cors: {
+        origin: "http://localhost:3000"
+    }
+});
 
-// Routes
-const app = express();
+let activeUsers = []
 
-// To serve images publicly
-app.use(express.static('public'));
-app.use('/images', express.static('images'));
+io.on("connection", (socket) => {
+    socket.on('new-user-add', (newUserId) => {
+        if (!activeUsers.some((user) => user.userId === newUserId)) {
+            activeUsers.push({
+                userId: newUserId,
+                socketId: socket.id
+            })
+        }
+        console.log("Connected Users", activeUsers)
+        io.emit('get-users', activeUsers)
+    })
 
-// Middleware
-dotenv.config();
-app.use(bodyParser.json({ limit: '30mb', extended: true }));
-app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
-app.use(cors())
+    socket.on("send-message", (data) => {
+        const {receiverId} = data;
+        const user = activeUsers.find((user) => user.userId === receiverId);
+        console.log("Sending from socket to : ", receiverId);
+        console.log("Data", data);
+        if (user) {
+            io.to(user.socketId).emit("receive-message", data);
+        }
+    })
 
-mongoose.connect(process.env.MONGO_DB, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => app.listen(process.env.PORT, () => console.log(`Listening at ${process.env.PORT}`))).catch((error) => console.log(error));
-
-// Usage of routes
-app.use('/auth', AuthRoute)
-app.use('/user', UserRoute)
-app.use('/post', PostRoute)
-app.use('/upload', UploadRoute)
+    socket.on("disconnected", () => {
+        activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
+        console.log("User disconnected", activeUsers)
+        io.emit('get-users', activeUsers)
+    })
+})
