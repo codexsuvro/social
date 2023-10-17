@@ -64,7 +64,7 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-If you have any questions, suggestions, or just want to say hi, feel free to contact us at socialox@example.com.
+If you have any questions, suggestions, or just want to say hi, feel free to contact us at suvrodeepdebnath.official@gmail.com.
 
 ---
 
