@@ -2,6 +2,8 @@
 
 SocialoX is a modern and feature-rich social media application built using React, socket.io, JWT, Express, and Multer. This project aims to provide a platform where users can connect, share their thoughts, and engage with others in a dynamic and real-time environment. Whether you're a developer looking to learn about building a social media app or someone who just wants to connect with others online, SocialoX has got you covered.
 
+![suvro](clients/public/pic_1.png)
+
 ## Features
 
 - **User Authentication**: Users can create accounts, log in, and securely manage their profiles.
@@ -12,6 +14,8 @@ SocialoX is a modern and feature-rich social media application built using React
 - **Privacy Settings**: Control who can see your posts and interact with you.
 - **File Uploads**: Share images seamlessly using Multer for file uploads.
 - **JWT Authentication**: Secure user authentication using JSON Web Tokens (JWT).
+
+  ![suvro](clients/public/pic_2.png)
 
 ## Installation
 
